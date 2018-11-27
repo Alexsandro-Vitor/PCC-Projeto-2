@@ -1,0 +1,5 @@
+# Sem arquivos de teste no repositório
+testfiles/
+
+# Sem .rars no repositório
+*.rar
