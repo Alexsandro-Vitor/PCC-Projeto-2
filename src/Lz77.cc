@@ -33,17 +33,17 @@ void prefix_match(string window, string pat, string ab, unsigned int& pos, unsig
 	build_fsm(pat, ab, fsm);
 	pos = maxlen = 0;
 	int cur = 0, ls = window.size() - pat.size();
-	for (int i = 0; i < window.size(); i++) {
+	for (int i = 0; i < window.size();) {
 		cur = fsm[cur][window[i]];
-		if (cur > maxlen && i - cur + 1 < ls) {
+		if (++i - cur < ls && cur > maxlen) {
 			maxlen = cur;
-			pos = i - cur + 1;
+			pos = i - cur;
 		}
 	}
 	maxlen = min(maxlen, pat.size() - 1);
 }
 
-void int_encode(int x, string ab, string& code) {
+void int_encode(unsigned int x, string ab, string& code) {
 	code.clear();
 	while (x) {
 		int bit = x % ab.size();
