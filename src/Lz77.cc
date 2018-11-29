@@ -32,7 +32,7 @@ void prefix_match(string window, string pat, string ab, unsigned int& pos, unsig
 	vector< unordered_map<char, int> > fsm(pat.size() + 1);
 	build_fsm(pat, ab, fsm);
 	pos = maxlen = 0;
-	int cur = 0, ls = window.size() - pat.size();
+	unsigned int cur = 0, ls = window.size() - pat.size();
 	for (int i = 0; i < window.size();) {
 		cur = fsm[cur][window[i]];
 		if (++i - cur < ls && cur > maxlen) {
@@ -52,6 +52,17 @@ void int_encode(unsigned int x, string ab, string& code) {
 	}
 }
 
-void lz77_encode(string txt, int ls, int ll, string ab) {
-	cout << "todo";
+void lz77_encode(string txt, unsigned int ls, unsigned int ll, string ab, string& code) {
+	string W = string(ls, ab[0]) + txt;
+	code.clear();
+	unsigned int p, l;
+	for (unsigned int j = ls; j < W.size() * ls; j += l + 1) {
+		unsigned int tempindex = min(W.size(), j+ll);
+		prefix_match(W.substr(j-ls, tempindex - (j-ls)), W.substr(j, tempindex - j), ab, p, l);
+		string tempcode;
+		int_encode(p, ab, tempcode);
+		code += tempcode;
+		int_encode(l, ab, tempcode);
+		code += W[j+1];
+	}
 }
