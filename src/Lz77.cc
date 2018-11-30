@@ -75,3 +75,13 @@ void lz77_encode(string txt, unsigned int ls, unsigned int ll, string ab, string
 		code += W[j+l];
 	}
 }
+
+unsigned int int_decode(string x, string ab) {
+	unsigned int power = 1, val = 0, c = x.size();
+	do {
+		c--;
+		val += power * ab.find(x[c]);
+		power *= ab.size();
+	} while (c);
+	return val;
+}

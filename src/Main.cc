@@ -29,7 +29,12 @@ int main(int argc, char* argv[]) {
 	cout << "hex: " << code << endl;
 
 	cout << endl << "l77 test" << endl;
-	lz77_encode("abracadabra pe de cabra", 7, 5, alphabet, code);
+	lz77_encode("abracadabra pe de cabra", 10, 5, alphabet, code);
 	cout << "Code: " << code << endl;
+
+	cout << endl << "int_decode test" << endl;
+	cout << "bin: " << int_decode("11000010", "01") << endl;
+	cout << "oct: " << int_decode("302", "01234567") << endl;
+	cout << "hex: " << int_decode("C2", "0123456789ABCDEF") << endl;
 	return 0;
 }
