@@ -53,25 +53,19 @@ void int_encode(unsigned int x, string ab, string& code) {
 	}
 }
 
+// Encodes the string
 void lz77_encode(string txt, unsigned int ls, unsigned int ll, string ab, string& code) {
 	string W = string(ls, ab[0]) + txt;
 	code.clear();
 	unsigned int p, l;
 	for (unsigned int j = ls; j < W.size(); j += l + 1) {
 		unsigned int tempindex = min(W.size(), j+ll);
-		cout << "window: " << W.substr(j-ls, tempindex - (j-ls)) << endl;
-		cout << "pat: " << W.substr(j, tempindex - j) << endl;
 		prefix_match(W.substr(j-ls, tempindex - (j-ls)), W.substr(j, tempindex - j), ab, p, l);
 		string tempcode;
 		int_encode(p, ab, tempcode);
-		cout << "p = " << p << endl;
-		cout << "int_encode(p) = " << tempcode << endl;
 		code += tempcode;
 		int_encode(l, ab, tempcode);
-		cout << "l = " << l << endl;
-		cout << "int_encode(l) = " << tempcode << endl;
 		code += tempcode;
-		cout << "W[j+l] = " << W[j+l] << endl;
 		code += W[j+l];
 	}
 }
@@ -84,4 +78,23 @@ unsigned int int_decode(string x, string ab) {
 		power *= ab.size();
 	} while (c);
 	return val;
+}
+
+// Decodes the string
+void lz77_decode(string code, unsigned int ls, unsigned int ll, string ab, string& txt) {
+	txt = string(ls, ab[0]);
+	double logl = log(ab.size());
+	unsigned int bs = (int)ceil(log(ls) / logl), bl = (int)ceil(log(ll) / logl);
+	unsigned int j = 0, sb_init = 0;
+	while (j < code.size()) {
+		unsigned int p = int_decode(code.substr(j, bs), ab);
+		j += bs;
+		unsigned int l = int_decode(code.substr(j, bl), ab);
+		j += bl;
+		for (unsigned int i = 0; i < l; i++)
+			txt += txt[sb_init + p + i];
+		txt += code[j++];
+		sb_init += l + 1;
+	}
+	txt.erase(0, ls);
 }
