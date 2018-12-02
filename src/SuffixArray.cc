@@ -1,4 +1,4 @@
-#define suffix(text, i) &text[i]
+#define suffix(text, i) (&text[i])
 
 struct suffix_comparer {
 	string text;
