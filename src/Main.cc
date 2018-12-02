@@ -1,14 +1,16 @@
+#include <algorithm>
+#include <chrono>
+#include <cmath>
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <chrono>
-#include <vector>
 #include <unordered_map>
-#include <cmath>
+#include <vector>
 
 using namespace std;
 
 #include "Lz77.cc"
+#include "SuffixArray.cc"
 
 int main(int argc, char* argv[]) {
 	cout << "prefix_match test" << endl;
@@ -43,5 +45,18 @@ int main(int argc, char* argv[]) {
 	string decoded;
 	lz77_decode(code, ls, ll, alphabet, decoded);
 	cout << "Decoded: " << decoded << endl;
+
+	cout << endl << "Suffix Array test" << endl;
+	string text = "testando";
+	vector<unsigned int> sa(text.size(), 0);
+	for (int i = 0; i < sa.size(); i++) {
+		sa[i] = i;
+		cout << i << ':' << &text[sa[i]] << ' ';
+	} cout << endl;
+	compare_suffix.text = text;
+	sort(sa.begin(), sa.end(), compare_suffix);
+	for (int i = 0; i < sa.size(); i++) {
+		cout << i << ':' << &text[sa[i]] << ' ';
+	}
 	return 0;
 }
