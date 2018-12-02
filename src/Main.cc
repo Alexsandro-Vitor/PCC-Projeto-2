@@ -51,12 +51,13 @@ int main(int argc, char* argv[]) {
 	vector<unsigned int> sa(text.size(), 0);
 	for (int i = 0; i < sa.size(); i++) {
 		sa[i] = i;
-		cout << i << ':' << &text[sa[i]] << ' ';
+		cout << i << ':' << suffix(text, sa[i]) << ' ';
 	} cout << endl;
 	compare_suffix.text = text;
 	sort(sa.begin(), sa.end(), compare_suffix);
 	for (int i = 0; i < sa.size(); i++) {
-		cout << i << ':' << &text[sa[i]] << ' ';
-	}
+		cout << i << ':' << suffix(text, sa[i]) << ' ';
+	} cout << endl;
+	cout << succ(text, "stand", sa);
 	return 0;
 }

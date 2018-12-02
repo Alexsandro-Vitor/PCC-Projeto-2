@@ -11,16 +11,17 @@ struct suffix_comparer {
 	}
 } compare_suffix;
 
+// Finds the first string (lexicographic order) in the string array which is after the pattern.
 int succ(string text, string pattern, vector<unsigned int>& sa) {
-	if (pattern.compare(&text[sa[text.size()-1]]) > 0)
+	if (pattern.compare(suffix(text, sa[text.size()-1])) > 0)
 		return text.size();
-	else if (pattern.compare(&text[sa[0]]) <= 0)
+	else if (pattern.compare(suffix(text, sa[0])) <= 0)
 		return 0;
 	else {
 		unsigned int l = 0, r = text.size() - 1;
 		while (r - l > 1) {
 			unsigned int h = (l + r) >> 1;
-			if (pattern.compare(&text[sa[h]]) <= 0)
+			if (pattern.compare(suffix(text, sa[h])) <= 0)
 				r = h;
 			else
 				l = h;
