@@ -1,5 +1,6 @@
 // Builds the finite state machine
-void build_fsm(string pat, string ab, vector< unordered_map<char, int> >& delta) {
+vector< unordered_map<char, int> > build_fsm(string& pat, string& ab) {
+	vector< unordered_map<char, int> > delta(pat.size() + 1);
 	for (const char c : ab)
 		delta[0][c] = 0;
 	delta[0][pat[0]] = 1;
@@ -12,10 +13,11 @@ void build_fsm(string pat, string ab, vector< unordered_map<char, int> >& delta)
 	}
 	for (const char a : ab)
 		delta[pat.size()][a] = delta[brd][a];
+	return delta;
 }
 
 //Prints the fsm
-void print_fsm(string pat, string ab, vector< unordered_map<char, int> >& delta) {
+void print_fsm(string& pat, string& ab, vector< unordered_map<char, int> >& delta) {
 	cout << "  ";
 	for (unsigned int i = 0; i < ab.size(); i++) {
 		cout << ab[i] << ' ';
@@ -28,9 +30,8 @@ void print_fsm(string pat, string ab, vector< unordered_map<char, int> >& delta)
 	}
 }
 
-void prefix_match(string window, string pat, string ab, unsigned int& pos, unsigned int& maxlen) {
-	vector< unordered_map<char, int> > fsm(pat.size() + 1);
-	build_fsm(pat, ab, fsm);
+void prefix_match(string window, string pat, string& ab, unsigned int& pos, unsigned int& maxlen) {
+	vector< unordered_map<char, int> > fsm = build_fsm(pat, ab);
 	pos = maxlen = 0;
 	unsigned int cur = 0, ls = window.size() - pat.size();
 	for (unsigned int i = 0; i < window.size();) {
@@ -43,34 +44,33 @@ void prefix_match(string window, string pat, string ab, unsigned int& pos, unsig
 	maxlen = min(maxlen, pat.size() - 1);
 }
 
-void int_encode(unsigned int x, string ab, string& code) {
-	code.clear();
-	if (!x) code = ab[0];
+string int_encode(unsigned int x, string& ab) {
+	if (!x) return string(1, ab[0]);
+	string code;
 	while (x) {
 		unsigned int bit = x % ab.size();
 		code = ab[bit] + code;
 		x /= ab.size();
 	}
+	return code;
 }
 
 // Encodes the string
-void lz77_encode(string txt, unsigned int ls, unsigned int ll, string ab, string& code) {
+string lz77_encode(string txt, unsigned int ls, unsigned int ll, string ab) {
 	string W = string(ls, ab[0]) + txt;
-	code.clear();
+	string code;
 	unsigned int p, l;
 	for (unsigned int j = ls; j < W.size(); j += l + 1) {
 		unsigned int tempindex = min(W.size(), j+ll);
 		prefix_match(W.substr(j-ls, tempindex - (j-ls)), W.substr(j, tempindex - j), ab, p, l);
-		string tempcode;
-		int_encode(p, ab, tempcode);
-		code += tempcode;
-		int_encode(l, ab, tempcode);
-		code += tempcode;
+		code += int_encode(p, ab);
+		code += int_encode(l, ab);
 		code += W[j+l];
 	}
+	return code;
 }
 
-unsigned int int_decode(string x, string ab) {
+unsigned int int_decode(string x, string& ab) {
 	unsigned int power = 1, val = 0, c = x.size();
 	do {
 		c--;
@@ -81,10 +81,10 @@ unsigned int int_decode(string x, string ab) {
 }
 
 // Decodes the string
-void lz77_decode(string code, unsigned int ls, unsigned int ll, string ab, string& txt) {
-	txt = string(ls, ab[0]);
+string lz77_decode(string& code, unsigned int ls, unsigned int ll, string& ab) {
+	string txt = string(ls, ab[0]);
 	double logl = log(ab.size());
-	unsigned int bs = (int)ceil(log(ls) / logl), bl = (int)ceil(log(ll) / logl);
+	unsigned int bs = (unsigned int)ceil(log(ls) / logl), bl = (unsigned int)ceil(log(ll) / logl);
 	unsigned int j = 0, sb_init = 0;
 	while (j < code.size()) {
 		unsigned int p = int_decode(code.substr(j, bs), ab);
@@ -96,5 +96,5 @@ void lz77_decode(string code, unsigned int ls, unsigned int ll, string ab, strin
 		txt += code[j++];
 		sb_init += l + 1;
 	}
-	txt.erase(0, ls);
+	return txt.erase(0, ls);
 }
