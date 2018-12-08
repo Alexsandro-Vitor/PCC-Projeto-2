@@ -11,6 +11,16 @@ struct suffix_comparer {
 	}
 } compare_suffix;
 
+// Generates the suffix array of a text
+vector<unsigned int> gen_suffix_array(string text) {
+	vector<unsigned int> sa (text.size(), 0);
+	for (unsigned int i = 0; i < sa.size(); i++)
+		sa[i] = i;
+	compare_suffix.text = text;
+	sort(sa.begin(), sa.end(), compare_suffix);
+	return sa;
+}
+
 // Finds the first string (lexicographic order) in the string array which is after the pattern.
 int succ(string text, string pattern, vector<unsigned int>& sa) {
 	if (pattern.compare(suffix(text, sa[text.size()-1])) > 0)
