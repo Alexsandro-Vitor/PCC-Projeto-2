@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 	if (!(Arguments::NAME_H.compare(argv[1]) && Arguments::NAME_HELP.compare(argv[1])))
 		return show_help(argc, argv);
 	
-	string text = "abracadabra pe de cabra";
+	/*string text = "abracadabra pe de cabra";
 	string alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 	unsigned int ls = 10, ll = 5;
 	ofstream output ("test.txt", ios::out);
@@ -37,7 +37,9 @@ int main(int argc, char* argv[]) {
 
 	output << endl;
 	output << lz77_decode(encoded, ls, ll, alphabet) << endl;
-	output.close();
+	output.close();*/
+	Arguments args(argc, argv);
+	cout << args << endl;
 
 	return 0;
 }
