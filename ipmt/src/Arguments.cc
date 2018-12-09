@@ -15,6 +15,7 @@ class Arguments {
 		string opt_alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 		unsigned int opt_ls = 10;
 		unsigned int opt_ll = 5;
+		bool opt_count = false;
 		unordered_set<string> patterns;
 		string filename;
 		Arguments(int count, char** arguments);
@@ -43,7 +44,7 @@ Arguments::Arguments(int count, char** args) {
 
 inline void Arguments::init_index(int count, char** args) {
 	index_mode = true;
-	int i = 2;
+	unsigned int i = 2;
 	// Options
 	for (; i < count; i++) {
 		if (args[i][0] != '-') break;
@@ -55,16 +56,35 @@ inline void Arguments::init_index(int count, char** args) {
 		else if (!NAME_INDEX_LL.compare(args[i]))
 			opt_ll = stoi(args[++i]);
 	}
-	// Pattern
+	// Text file
 	if (i >= count)
-		cout << "ERROR: Pattern is missing" << endl;
+		cout << "ERROR: Text file is missing" << endl;
 	else
 		filename = args[i];
 }
 
 inline void Arguments::init_search(int count, char** args) {
 	index_mode = false;
-	cout << "TODO search" << endl;
+	unsigned int i = 2;
+	// Options
+	for (; i < count; i++) {
+		if (args[i][0] != '-') break;
+
+		if (!(NAME_SEARCH_C.compare(args[i]) || NAME_SEARCH_COUNT.compare(args[i])))
+			opt_count = args[++i];
+	}
+	// Pattern
+	if (i >= count)
+		cout << "ERROR: Pattern is missing" << endl;
+	else {
+		// TODO patternfile
+		patterns.insert(args[i++]);
+		// Index file
+		if (i >= count)
+			cout << "ERROR: Index file is missing" << endl;
+		else
+			filename = args[i];
+	}
 }
 
 inline string Arguments::getIndexName() {
@@ -78,6 +98,12 @@ ostream& operator<<(ostream& os, const Arguments& args) {
 		os << "\topt_alphabet = \"" << args.opt_alphabet << "\"," << endl;
 		os << "\topt_ls = " << args.opt_ls << ',' << endl;
 		os << "\topt_ll = " << args.opt_ll << ',' << endl;
+	} else {
+		os << "\topt_count = " << args.opt_count << ',' << endl;
+		os << "\tpatterns = \"[" << endl;
+		for (const string pattern : args.patterns)
+			os << "\t\t\"" << pattern << "\"," << endl;
+		os << "\t]" << endl;
 	}
 	os << "\tfilename = \"" << args.filename << '"' << endl;
 	os << ')';

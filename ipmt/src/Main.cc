@@ -29,7 +29,7 @@ void index_main(Arguments& args) {
 	cout << "Filename for index: " << args.getIndexName() << endl;
 	output.open(args.getIndexName(), ios::out);
 	output << args.opt_alphabet << endl;
-	output << args.opt_ls << ' ' << args.opt_ll << endl;
+	output << (char)args.opt_ls << ' ' << (char)args.opt_ll << endl;
 	for (string text; getline(input, text);) {
 		cout << text << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
@@ -44,6 +44,8 @@ void search_main(Arguments& args) {
 }
 
 int main(int argc, char* argv[]) {
+	cout << boolalpha;
+
 	if (argc == 1) {
 		cout << "ERROR: No arguments" << endl;
 		return -1;
