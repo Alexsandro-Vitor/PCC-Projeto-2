@@ -20,6 +20,7 @@ class Arguments {
 		Arguments(int count, char** arguments);
 		void init_index(int count, char** args);
 		void init_search(int count, char** args);
+		string getIndexName();
 		friend ostream& operator<<(ostream& os, const Arguments& args);
 };
 
@@ -64,6 +65,10 @@ inline void Arguments::init_index(int count, char** args) {
 inline void Arguments::init_search(int count, char** args) {
 	index_mode = false;
 	cout << "TODO search" << endl;
+}
+
+inline string Arguments::getIndexName() {
+	return filename.substr(0, filename.find_last_of(".")) + ".idx";
 }
 
 ostream& operator<<(ostream& os, const Arguments& args) {

@@ -9,11 +9,39 @@
 
 using namespace std;
 
+#define uint unsigned int
+
 #include "Arguments.cc"
 #include "Help.cc"
 
 #include "Lz77.cc"
 #include "SuffixArray.cc"
+
+ifstream input;
+ofstream output;
+
+void index_main(Arguments& args) {
+	input.open(args.filename, ios::in);
+	if (input.fail()) {
+		cout << "ERROR: The file is not acessible" << endl;
+		return;
+	}
+	cout << "Filename for index: " << args.getIndexName() << endl;
+	output.open(args.getIndexName(), ios::out);
+	output << args.opt_alphabet << endl;
+	output << args.opt_ls << ' ' << args.opt_ll << endl;
+	for (string text; getline(input, text);) {
+		cout << text << endl;
+		vector<unsigned int> sa = gen_suffix_array(text);
+		for (const unsigned int i : sa)
+			output << i << ' ';
+		output << endl << lz77_encode(text, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
+	}
+}
+
+void search_main(Arguments& args) {
+	cout << "TODO search" << endl;
+}
 
 int main(int argc, char* argv[]) {
 	if (argc == 1) {
@@ -38,8 +66,11 @@ int main(int argc, char* argv[]) {
 	output << endl;
 	output << lz77_decode(encoded, ls, ll, alphabet) << endl;
 	output.close();*/
-	Arguments args(argc, argv);
+	Arguments args = Arguments(argc, argv);
 	cout << args << endl;
+
+	if (args.index_mode) index_main(args);
+	else search_main(args);
 
 	return 0;
 }
