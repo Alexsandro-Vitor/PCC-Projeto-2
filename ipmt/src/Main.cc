@@ -23,24 +23,58 @@ ofstream output;
 void index_main(Arguments& args) {
 	input.open(args.filename, ios::in);
 	if (input.fail()) {
-		cout << "ERROR: The file is not acessible" << endl;
+		cout << "ERROR: The file " << args.filename << " is not acessible" << endl;
 		return;
 	}
-	cout << "Filename for index: " << args.getIndexName() << endl;
+
 	output.open(args.getIndexName(), ios::out);
-	output << args.opt_alphabet << endl;
-	output << (char)args.opt_ls << ' ' << (char)args.opt_ll << endl;
+	output << (char)args.opt_ls << (char)args.opt_ll << args.opt_alphabet << endl;
 	for (string text; getline(input, text);) {
 		cout << text << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
+		output << int_encode(sa.size(), args.opt_alphabet) << endl;
 		for (const unsigned int i : sa)
-			output << i << ' ';
-		output << endl << lz77_encode(text, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
+			output << int_encode(i, args.opt_alphabet) << endl;
+		output << lz77_encode(text, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
 	}
 }
 
+inline bool gettrimline(ifstream& in, string& str) {
+	bool out = (bool)getline(in, str);
+	if (out) str.resize(str.size() - 1);
+	return out;
+}
+
 void search_main(Arguments& args) {
-	cout << "TODO search" << endl;
+	input.open(args.filename, ifstream::binary);
+	if (input.fail()) {
+		cout << "ERROR: The file " << args.filename << " is not acessible" << endl;
+		return;
+	}
+
+	char c;
+	input.get(c);
+	args.opt_ls = c;
+	input.get(c);
+	args.opt_ll = c;
+	gettrimline(input, args.opt_alphabet);
+	cout << args << endl;
+
+	for (string line; gettrimline(input, line);) {
+		cout << endl;
+		unsigned int size = int_decode(line, args.opt_alphabet);
+		vector<unsigned int> sa(size, 0);
+		while (size) {
+			gettrimline(input, line);
+			sa[sa.size() - size--] = int_decode(line, args.opt_alphabet);
+		}
+		cout << "sa: ";
+		for (const unsigned int i : sa) {
+			cout << i << ' ';
+		} cout << endl;
+		gettrimline(input, line);
+		cout << "Line: " << lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
+	}
 }
 
 int main(int argc, char* argv[]) {

@@ -94,17 +94,16 @@ inline string Arguments::getIndexName() {
 ostream& operator<<(ostream& os, const Arguments& args) {
 	os << "Arguments(" << endl;
 	os << "\tmode = " << (args.index_mode ? "INDEX" : "SEARCH") << "," << endl;
-	if (args.index_mode) {
-		os << "\topt_alphabet = \"" << args.opt_alphabet << "\"," << endl;
-		os << "\topt_ls = " << args.opt_ls << ',' << endl;
-		os << "\topt_ll = " << args.opt_ll << ',' << endl;
-	} else {
-		os << "\topt_count = " << args.opt_count << ',' << endl;
-		os << "\tpatterns = \"[" << endl;
-		for (const string pattern : args.patterns)
-			os << "\t\t\"" << pattern << "\"," << endl;
-		os << "\t]" << endl;
-	}
+	os << "\topt_alphabet = \"" << args.opt_alphabet << "\"," << endl;
+	os << "\topt_ls = " << args.opt_ls << ',' << endl;
+	os << "\topt_ll = " << args.opt_ll << ',' << endl;
+
+	os << "\topt_count = " << args.opt_count << ',' << endl;
+	os << "\tpatterns = \"[" << endl;
+	for (const string pattern : args.patterns)
+		os << "\t\t\"" << pattern << "\"," << endl;
+	os << "\t]," << endl;
+
 	os << "\tfilename = \"" << args.filename << '"' << endl;
 	os << ')';
 	return os;  
