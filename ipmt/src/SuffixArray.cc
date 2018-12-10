@@ -7,16 +7,19 @@ struct suffix_comparer {
 		 * são considerados valores 'true' pelo sort. Então o XOR abaixo converte as saídas 1 para 0
 		 * para que elas sejam tratadas como 'false'.
 		 */
-		return string(suffix(text, i)).compare(suffix(text, j)) ^ 1;
+		return text.compare(i, text.size(), text, j, text.size()) < 0;
+		//return string(suffix(text, i)).compare(suffix(text, j)) ^ 1;
 	}
 } compare_suffix;
 
 // Generates the suffix array of a text
-vector<unsigned int> gen_suffix_array(string& text) {
+inline vector<unsigned int> gen_suffix_array(string& text) {
 	vector<unsigned int> sa (text.size(), 0);
+	cout << "building" << endl;
 	for (unsigned int i = 0; i < sa.size(); i++)
 		sa[i] = i;
 	compare_suffix.text = text;
+	cout << "sorting" << endl;
 	sort(sa.begin(), sa.end(), compare_suffix);
 	return sa;
 }
