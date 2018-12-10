@@ -12,7 +12,7 @@ struct suffix_comparer {
 } compare_suffix;
 
 // Generates the suffix array of a text
-vector<unsigned int> gen_suffix_array(string text) {
+vector<unsigned int> gen_suffix_array(string& text) {
 	vector<unsigned int> sa (text.size(), 0);
 	for (unsigned int i = 0; i < sa.size(); i++)
 		sa[i] = i;
@@ -21,8 +21,8 @@ vector<unsigned int> gen_suffix_array(string text) {
 	return sa;
 }
 
-// Finds the first string (lexicographic order) in the string array which is after the pattern.
-int succ(string text, string pattern, vector<unsigned int>& sa) {
+// Finds the first string (lexicographic order) in the string array which succedes the pattern.
+unsigned int succ(string& text, string& pattern, vector<unsigned int>& sa) {
 	if (pattern.compare(suffix(text, sa[text.size()-1])) > 0)
 		return text.size();
 	else if (pattern.compare(suffix(text, sa[0])) <= 0)
@@ -37,5 +37,14 @@ int succ(string text, string pattern, vector<unsigned int>& sa) {
 				l = h;
 		}
 		return r;
+	}
+}
+
+void sa_search(string& txt, string& pat, vector<unsigned int>& sa, queue<Match>& matches) {
+	unsigned int L = succ(txt, pat, sa);
+	cout << "sa[" << L << "] = " << sa[L] << endl;
+	if (L < txt.size()) {
+		cout << "suffix(txt, sa[L]) = " << suffix(txt, sa[L]) << endl;
+		matches.push(Match(0, sa[L], txt, pat.size()));
 	}
 }

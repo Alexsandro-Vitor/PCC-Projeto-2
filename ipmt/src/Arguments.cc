@@ -16,7 +16,7 @@ class Arguments {
 		unsigned int opt_ls = 10;
 		unsigned int opt_ll = 5;
 		bool opt_count = false;
-		unordered_set<string> patterns;
+		string patterns;
 		string filename;
 		Arguments(int count, char** arguments);
 		void init_index(int count, char** args);
@@ -78,7 +78,7 @@ inline void Arguments::init_search(int count, char** args) {
 		cout << "ERROR: Pattern is missing" << endl;
 	else {
 		// TODO patternfile
-		patterns.insert(args[i++]);
+		patterns = args[i++];
 		// Index file
 		if (i >= count)
 			cout << "ERROR: Index file is missing" << endl;
@@ -99,10 +99,7 @@ ostream& operator<<(ostream& os, const Arguments& args) {
 	os << "\topt_ll = " << args.opt_ll << ',' << endl;
 
 	os << "\topt_count = " << args.opt_count << ',' << endl;
-	os << "\tpatterns = \"[" << endl;
-	for (const string pattern : args.patterns)
-		os << "\t\t\"" << pattern << "\"," << endl;
-	os << "\t]," << endl;
+	os << "\tpatterns = \"" << args.patterns << "\"," << endl;
 
 	os << "\tfilename = \"" << args.filename << '"' << endl;
 	os << ')';

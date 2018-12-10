@@ -3,6 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -11,8 +12,10 @@ using namespace std;
 
 #define uint unsigned int
 
+#include "Formatting.cc"
 #include "Arguments.cc"
 #include "Help.cc"
+#include "Match.cc"
 
 #include "Lz77.cc"
 #include "SuffixArray.cc"
@@ -46,6 +49,8 @@ inline bool gettrimline(ifstream& in, string& str) {
 }
 
 void search_main(Arguments& args) {
+	queue<Match> matches;			// Os matches encontrados vão pra cá
+
 	input.open(args.filename, ifstream::binary);
 	if (input.fail()) {
 		cout << "ERROR: The file " << args.filename << " is not acessible" << endl;
@@ -73,7 +78,19 @@ void search_main(Arguments& args) {
 			cout << i << ' ';
 		} cout << endl;
 		gettrimline(input, line);
-		cout << "Line: " << lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
+		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
+		cout << "Line: " << decoded << endl;
+		sa_search(decoded, args.patterns, sa, matches);
+	}
+
+	//Imprime cada linha com o padrão
+	if (matches.size())
+		cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << matches.size() << " matches" << endl;
+	while (matches.size()) {
+		Match temp = matches.front();
+		if (!args.opt_count) cout << FORMAT_PATH << args.filename << FORMAT_RESET << ':' << temp << endl;
+
+		matches.pop();
 	}
 }
 
@@ -86,22 +103,7 @@ int main(int argc, char* argv[]) {
 	}
 	if (!(Arguments::NAME_H.compare(argv[1]) && Arguments::NAME_HELP.compare(argv[1])))
 		return show_help(argc, argv);
-	
-	/*string text = "abracadabra pe de cabra";
-	string alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
-	unsigned int ls = 10, ll = 5;
-	ofstream output ("test.txt", ios::out);
-	output << alphabet << endl;
-	output << "LZ77" << ' ' << ls << ' ' << ll << endl;
-	vector<unsigned int> sa = gen_suffix_array(text);
-	for (unsigned int i = 0; i < sa.size(); i++)
-		output << sa[i] << ' ';
-	string encoded = lz77_encode(text, ls, ll, alphabet);
-	output << endl << encoded << endl;
 
-	output << endl;
-	output << lz77_decode(encoded, ls, ll, alphabet) << endl;
-	output.close();*/
 	Arguments args = Arguments(argc, argv);
 	cout << args << endl;
 
