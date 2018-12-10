@@ -65,7 +65,8 @@ void search_main(Arguments& args) {
 	gettrimline(input, args.opt_alphabet);
 	cout << args << endl;
 
-	for (string line; gettrimline(input, line);) {
+	string line;
+	for (unsigned int lineNumber = 0; gettrimline(input, line); lineNumber++) {
 		cout << endl;
 		unsigned int size = int_decode(line, args.opt_alphabet);
 		vector<unsigned int> sa(size, 0);
@@ -80,7 +81,7 @@ void search_main(Arguments& args) {
 		gettrimline(input, line);
 		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
 		cout << "Line: " << decoded << endl;
-		sa_search(decoded, args.patterns, sa, matches);
+		sa_search(decoded, args.patterns, sa, lineNumber, matches);
 	}
 
 	//Imprime cada linha com o padrão
