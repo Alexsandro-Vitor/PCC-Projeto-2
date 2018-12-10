@@ -70,8 +70,8 @@ inline void Arguments::init_search(int count, char** args) {
 	for (; i < count; i++) {
 		if (args[i][0] != '-') break;
 
-		if (!(NAME_SEARCH_C.compare(args[i]) || NAME_SEARCH_COUNT.compare(args[i])))
-			opt_count = args[++i];
+		if (!(NAME_SEARCH_C.compare(args[i]) && NAME_SEARCH_COUNT.compare(args[i])))
+			opt_count = true;
 	}
 	// Pattern
 	if (i >= count)

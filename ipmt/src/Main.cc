@@ -49,7 +49,8 @@ inline bool gettrimline(ifstream& in, string& str) {
 }
 
 void search_main(Arguments& args) {
-	queue<Match> matches;			// Os matches encontrados vão pra cá
+	queue<Match> matches;	// Os matches encontrados vão pra cá
+	unsigned int count = 0;	// Se não for para imprimir, eles são contados aqui
 
 	input.open(args.filename, ifstream::binary);
 	if (input.fail()) {
@@ -57,6 +58,7 @@ void search_main(Arguments& args) {
 		return;
 	}
 
+	// Parâmetros da compressão
 	char c;
 	input.get(c);
 	args.opt_ls = c;
@@ -74,12 +76,20 @@ void search_main(Arguments& args) {
 		}
 		gettrimline(input, line);
 		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
-		sa_search(decoded, args.patterns, sa, lineNumber, matches);
+		if (args.opt_count)
+			count += sa_search(decoded, args.patterns, sa);
+		else
+			sa_search(decoded, args.patterns, sa, lineNumber, matches);
 	}
 
-	//Imprime cada linha com o padrão
-	if (matches.size())
-		cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << matches.size() << " matches" << endl;
+	// Imprime apenas a quantidade de matches
+	if (args.opt_count) {
+		cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << count << " matches" << endl;
+		return;
+	}
+
+	// Imprime cada linha com o padrão
+	cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << matches.size() << " matches" << endl;
 	while (matches.size()) {
 		Match temp = matches.front();
 		if (!args.opt_count) cout << FORMAT_PATH << args.filename << FORMAT_RESET << ':' << temp << endl;
