@@ -33,7 +33,6 @@ void index_main(Arguments& args) {
 	output.open(args.getIndexName(), ios::out);
 	output << (char)args.opt_ls << (char)args.opt_ll << args.opt_alphabet << endl;
 	for (string text; getline(input, text);) {
-		cout << text << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
 		output << int_encode(sa.size(), args.opt_alphabet) << endl;
 		for (const unsigned int i : sa)
