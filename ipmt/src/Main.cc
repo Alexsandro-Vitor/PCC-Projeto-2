@@ -63,24 +63,17 @@ void search_main(Arguments& args) {
 	input.get(c);
 	args.opt_ll = c;
 	gettrimline(input, args.opt_alphabet);
-	cout << args << endl;
 
 	string line;
 	for (unsigned int lineNumber = 0; gettrimline(input, line); lineNumber++) {
-		cout << endl;
 		unsigned int size = int_decode(line, args.opt_alphabet);
 		vector<unsigned int> sa(size, 0);
 		while (size) {
 			gettrimline(input, line);
 			sa[sa.size() - size--] = int_decode(line, args.opt_alphabet);
 		}
-		cout << "sa: ";
-		for (const unsigned int i : sa) {
-			cout << i << ' ';
-		} cout << endl;
 		gettrimline(input, line);
 		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
-		cout << "Line: " << decoded << endl;
 		sa_search(decoded, args.patterns, sa, lineNumber, matches);
 	}
 
@@ -106,8 +99,6 @@ int main(int argc, char* argv[]) {
 		return show_help(argc, argv);
 
 	Arguments args = Arguments(argc, argv);
-	cout << args << endl;
-
 	if (args.index_mode) index_main(args);
 	else search_main(args);
 

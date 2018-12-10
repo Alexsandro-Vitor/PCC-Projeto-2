@@ -40,12 +40,21 @@ unsigned int succ(string& text, string& pattern, vector<unsigned int>& sa) {
 	}
 }
 
-void sa_search(string& txt, string& pat, vector<unsigned int>& sa,
+inline void sa_search(string& txt, string& pat, vector<unsigned int>& sa,
 		unsigned int line, queue<Match>& matches) {
 	unsigned int L = succ(txt, pat, sa);
-	cout << "sa[" << L << "] = " << sa[L] << endl;
-	if (L < txt.size()) {
-		cout << "suffix(txt, sa[L]) = " << suffix(txt, sa[L]) << endl;
+	while (L < sa.size() && txt.compare(sa[L], pat.size(), pat) == 0) {
 		matches.push(Match(line, sa[L], txt, pat.size()));
+		L++;
 	}
+}
+
+inline unsigned int sa_search(string& txt, string& pat, vector<unsigned int>& sa) {
+	unsigned int output = 0;
+	unsigned int L = succ(txt, pat, sa);
+	while (L < sa.size() && txt.compare(sa[L], pat.size(), pat) == 0) {
+		output++;
+		L++;
+	}
+	return output;
 }
