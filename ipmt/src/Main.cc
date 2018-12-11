@@ -36,7 +36,7 @@ void index_main(Arguments& args) {
 	output << int_encode(args.opt_ls, args.opt_alphabet) << endl;
 	output << int_encode(args.opt_ll, args.opt_alphabet) << endl;
 	for (string text; getline(input, text);) {
-		cout << "Suffix array" << endl;
+		cout << text << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
 		cout << "Printing sa" << endl;
 		output << int_encode(sa.size(), args.opt_alphabet) << endl;
@@ -106,7 +106,9 @@ void search_main(Arguments& args) {
 }
 
 int main(int argc, char* argv[]) {
+	// Configuring output
 	cout << boolalpha;
+	ios_base::sync_with_stdio(false);
 
 	if (argc == 1) {
 		cout << "ERROR: No arguments" << endl;
@@ -114,10 +116,16 @@ int main(int argc, char* argv[]) {
 	}
 	if (!(Arguments::NAME_H.compare(argv[1]) && Arguments::NAME_HELP.compare(argv[1])))
 		return show_help(argc, argv);
+	
+	auto tStart = chrono::high_resolution_clock::now();
 
 	Arguments args = Arguments(argc, argv);
 	if (args.index_mode) index_main(args);
 	else search_main(args);
+
+	auto tEnd = chrono::high_resolution_clock::now();
+	chrono::duration<double> elapsed = tEnd - tStart;
+	cout << "Execution time: " << elapsed.count() << endl;
 
 	return 0;
 }
