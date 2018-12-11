@@ -74,7 +74,6 @@ unsigned int int_decode(string x, string& ab) {
 	unsigned int power = 1, val = 0, c = x.size();
 	do {
 		c--;
-		//cout << c << ' ' << x[c] << ' ' << ab.find(x[c]) << endl;
 		val += power * ab.find(x[c]);
 		power *= ab.size();
 	} while (c);

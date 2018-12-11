@@ -45,6 +45,7 @@ unsigned int succ(string& text, string& pattern, vector<unsigned int>& sa) {
 
 inline void sa_search(string& txt, string& pat, vector<unsigned int>& sa,
 		unsigned int line, queue<Match>& matches) {
+	if (!sa.size()) return;
 	unsigned int L = succ(txt, pat, sa);
 	while (L < sa.size() && txt.compare(sa[L], pat.size(), pat) == 0) {
 		matches.push(Match(line, sa[L], txt, pat.size()));
@@ -53,6 +54,7 @@ inline void sa_search(string& txt, string& pat, vector<unsigned int>& sa,
 }
 
 inline unsigned int sa_search(string& txt, string& pat, vector<unsigned int>& sa) {
+	if (!sa.size()) return 0;
 	unsigned int output = 0;
 	unsigned int L = succ(txt, pat, sa);
 	while (L < sa.size() && txt.compare(sa[L], pat.size(), pat) == 0) {
