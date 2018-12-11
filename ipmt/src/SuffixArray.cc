@@ -3,12 +3,7 @@
 struct suffix_comparer {
 	string text;
 	bool operator() (unsigned int i, unsigned int j) {
-		/* O metodo compare de strings retorna -1 ou 1 dependendo de qual valor for maior, porém ambos
-		 * são considerados valores 'true' pelo sort. Então o XOR abaixo converte as saídas 1 para 0
-		 * para que elas sejam tratadas como 'false'.
-		 */
 		return text.compare(i, text.size(), text, j, text.size()) < 0;
-		//return string(suffix(text, i)).compare(suffix(text, j)) ^ 1;
 	}
 } compare_suffix;
 
