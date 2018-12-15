@@ -1,24 +1,20 @@
-#include <algorithm>
 #include <chrono>
-#include <cmath>
 #include <fstream>
 #include <iostream>
 #include <queue>
-#include <string>
-#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
 #define uint unsigned int
 
-#include "Formatting.cc"
-#include "Arguments.cc"
-#include "Help.cc"
-#include "Match.cc"
+#include "Formatting.h"
+#include "Arguments.h"
+#include "Help.h"
+#include "Match.h"
 
-#include "Lz77.cc"
-#include "SuffixArray.cc"
+#include "Lz77.h"
+#include "SuffixArray.h"
 
 ifstream input;
 ofstream output;
@@ -32,6 +28,7 @@ void index_main(Arguments& args) {
 	cout << args << endl;
 
 	output.open(args.getIndexName(), ios::out);
+	output.open("teste.txt", ios::out);
 	output << args.opt_alphabet << endl;
 	output << int_encode(args.opt_ls, args.opt_alphabet) << endl;
 	output << int_encode(args.opt_ll, args.opt_alphabet) << endl;
