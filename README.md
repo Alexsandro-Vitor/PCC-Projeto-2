@@ -7,8 +7,12 @@ Projeto realizado para a cadeia de Processamento de Cadeia de Caracteres 2018.2
 Este projeto consiste em um indexador que gera índices para busca de padrões e um buscador de padrões para os índices gerados pela funcionalidade anterior.
 
 ## Compilação
-* **Windows:** `src\make.bat`
-* **Linux:** `src/make.sh`
+### Windows
+* **Da raiz do projeto:** `src\make.bat`
+
+### Linux
+* **Na pasta src:** `make`
+* **Da raiz do projeto:** `src/make.sh`
 
 ## Execução
 * **Modo indexação:** `bin/ipmt index [opções] [arquivo]`
