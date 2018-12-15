@@ -48,7 +48,8 @@ const string Arguments::NAME_SEARCH_COUNT = "--count";
 
 Arguments::Arguments(int count, char** args) {
 	if (!NAME_INDEX.compare(args[1])) init_index(count, args);
-	if (!NAME_SEARCH.compare(args[1])) init_search(count, args);
+	else if (!NAME_SEARCH.compare(args[1])) init_search(count, args);
+    else throw -1;
 }
 
 inline void Arguments::init_index(int count, char** args) {

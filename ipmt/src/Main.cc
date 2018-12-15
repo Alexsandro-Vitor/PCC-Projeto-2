@@ -28,7 +28,6 @@ void index_main(Arguments& args) {
 	cout << args << endl;
 
 	output.open(args.getIndexName(), ios::out);
-	output.open("teste.txt", ios::out);
 	output << args.opt_alphabet << endl;
 	output << int_encode(args.opt_ls, args.opt_alphabet) << endl;
 	output << int_encode(args.opt_ll, args.opt_alphabet) << endl;
@@ -116,9 +115,14 @@ int main(int argc, char* argv[]) {
 	
 	auto tStart = chrono::high_resolution_clock::now();
 
-	Arguments args = Arguments(argc, argv);
-	if (args.index_mode) index_main(args);
-	else search_main(args);
+	try {
+		Arguments args = Arguments(argc, argv);
+		if (args.index_mode) index_main(args);
+		else search_main(args);
+	} catch (int error) {
+		cout << "ERROR: This mode is invalid" << endl;
+		return error;
+	}
 
 	auto tEnd = chrono::high_resolution_clock::now();
 	chrono::duration<double> elapsed = tEnd - tStart;
