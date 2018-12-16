@@ -27,18 +27,18 @@ void index_main(Arguments& args) {
 	}
 	cout << args << endl;
 
-	output.open(args.getIndexName(), ios::out);
-	output << args.opt_alphabet << endl;
-	output << int_encode(args.opt_ls, args.opt_alphabet) << endl;
-	output << int_encode(args.opt_ll, args.opt_alphabet) << endl;
+	output.open(args.getIndexName(), ios::out | ios::binary);
+	//output << args.opt_alphabet << endl;
+	output << int_encode(args.opt_ls) << int_encode(args.opt_ll);
 	for (string text; getline(input, text);) {
-		cout << text << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
-		cout << "Printing sa" << endl;
-		output << int_encode(sa.size(), args.opt_alphabet) << endl;
-		for (const unsigned int i : sa)
-			output << int_encode(i, args.opt_alphabet) << endl;
-		output << lz77_encode(text, args.opt_ls, args.opt_ll, args.opt_alphabet) << endl;
+		output << int_encode(sa.size());
+		cout << sa.size() << endl;
+		for (const unsigned int i : sa) {
+			output << int_encode(i);
+			cout << i << ' ';
+		} cout << endl;
+		output << lz77_encode(text, args.opt_ls, args.opt_ll);
 	}
 }
 
@@ -48,12 +48,20 @@ inline bool gettrimline(ifstream& in, string& str) {
 	return out;
 }
 
+char intBuffer[4];
+string intString;
+inline bool readInt() {
+	bool out = (bool)input.read(intBuffer, 4);
+	intString = string(intBuffer, 4);
+	return out;
+}
+
 void search_main(Arguments& args) {
 	cout << "search" << endl;
 	queue<Match> matches;	// Os matches encontrados vão pra cá
 	unsigned int count = 0;	// Se não for para imprimir, eles são contados aqui
 
-	input.open(args.filename, ifstream::binary);
+	input.open(args.filename, ios::in | ios::binary);
 	if (input.fail()) {
 		cout << "ERROR: The file " << args.filename << " is not acessible" << endl;
 		return;
@@ -61,8 +69,43 @@ void search_main(Arguments& args) {
 
 	// Parâmetros da compressão
 	cout << "params" << endl;
-	gettrimline(input, args.opt_alphabet);
-	string line;
+	readInt();
+	args.opt_ls = int_decode(intString);
+	readInt();
+	args.opt_ll = int_decode(intString);
+	cout << args << endl;
+
+	for (unsigned int lineNum = 0; readInt(); lineNum++) {
+		unsigned int lineSize = int_decode(intString);
+		vector<unsigned int> sa(lineSize, 0);
+		cout << lineSize << endl;
+		for (unsigned int i = 0; i < lineSize; i++) {
+			readInt();
+			sa[lineSize] = int_decode(intString);
+			cout << sa[lineSize] << ' ';
+		} cout << endl;
+		string line = string(lineSize * 9, 0);
+		for (unsigned int i = 0; i < line.size(); i++) {
+			readInt();
+			for (unsigned int j = 0; j < 4; j++) {
+				line[i + j] = intString[j];
+			}
+			i += 4;
+			readInt();
+			for (unsigned int j = 0; j < 4; j++) {
+				line[i + j] = intString[j];
+			}
+			i += 4;
+			char c;
+			input.get(c);
+			line[i] = c;
+		} cout << line << endl;
+		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
+	}
+
+	//gettrimline(input, args.opt_alphabet);
+	/*string line;
+	
 	gettrimline(input, line);
 	args.opt_ls = int_decode(line, args.opt_alphabet);
 	gettrimline(input, line);
@@ -98,7 +141,7 @@ void search_main(Arguments& args) {
 		if (!args.opt_count) cout << FORMAT_PATH << args.filename << FORMAT_RESET << ':' << temp << endl;
 
 		matches.pop();
-	}
+	}*/
 }
 
 int main(int argc, char* argv[]) {

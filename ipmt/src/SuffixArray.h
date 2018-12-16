@@ -22,11 +22,9 @@ struct suffix_comparer {
 // Generates the suffix array of a text
 inline vector<unsigned int> gen_suffix_array(string& text) {
 	vector<unsigned int> sa (text.size(), 0);
-	cout << "building" << endl;
 	for (unsigned int i = 0; i < sa.size(); i++)
 		sa[i] = i;
 	compare_suffix.text = text;
-	cout << "sorting" << endl;
 	sort(sa.begin(), sa.end(), compare_suffix);
 	return sa;
 }
