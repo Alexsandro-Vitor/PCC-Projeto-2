@@ -72,7 +72,7 @@ void search_main(Arguments& args) {
 	args.opt_ll = int_decode(intString);
 	cout << args << endl;
 
-	for (unsigned int lineNum = 0; ((lineNum < args.opt_lines) || !args.opt_lines) && readInt(); lineNum++) {
+	for (unsigned int lineNum = 0; ((lineNum < args.opt_lines) || !args.opt_lines) && readInt();) {
 		unsigned int lineSize = int_decode(intString);
 		vector<unsigned int> sa(lineSize, 0);
 		for (unsigned int i = 0; i < lineSize; i++) {
@@ -96,7 +96,12 @@ void search_main(Arguments& args) {
 			count += sa_search(decoded, args.patterns, sa);
 		else
 			sa_search(decoded, args.patterns, sa, lineNum, matches);
-	}
+
+		cout << "\r" << ++lineNum;
+		if (args.opt_lines)
+			cout << '/' << args.opt_lines;
+		cout << " lines searched" << flush;
+	} cout << endl;
 
 	// Imprime apenas a quantidade de matches
 	if (args.opt_count) {
