@@ -9,14 +9,17 @@
 using namespace std;
 
 // Constantes
+const string HELP_LINES =	"-l, --lines:\n"
+							"	Define a quantidade de linhas a ser indexada / buscada.\n"
+							"	Padrão: 0 (indexar / buscar em todo o arquivo)\n";
 const string HELP_LS =	"--ls:\n"
 						"	Define o parâmetro ls para a compressão.\n"
-						"	Padrão: 10";
+						"	Padrão: 256\n";
 const string HELP_LL =	"--ll:\n"
 						"	Define o parâmetro ll para a compressão.\n"
-						"	Padrão: 5";
+						"	Padrão: 128\n";
 const string HELP_C =	"-c, --count:\n"
-						"	Apenas conta o nº de ocorrências. Não recebe argumentos.";
+						"	Apenas conta o nº de ocorrências. Não recebe argumentos.\n";
 
 // Exibe o texto de ajuda
 int show_help(int argc, char* argv[]) {
@@ -34,17 +37,19 @@ int show_help(int argc, char* argv[]) {
 		cout << "arquivo : Arquivo a ser lido para gerar o arquivo índice"
 		" (modo indexação) ou para se realizar a busca nele (modo busca)." << endl;
 		cout << "Opções (Indexação):" << endl;
-		cout << HELP_LS << endl << HELP_LL << endl;
+		cout << HELP_LINES << HELP_LS << HELP_LL;
 		cout << "Opções (Busca):" << endl;
-		cout << HELP_C << endl;
+		cout << HELP_C;
 		cout << "Adicionando uma das opções após -h ou --help, é possível receber informação apenas sobre ela." << endl;
 	} else {
+		if (!(Arguments::NAME_L.compare(argv[2]) && Arguments::NAME_LINES.compare(argv[2])))
+			cout << HELP_LINES;
 		if (!Arguments::NAME_INDEX_LS.compare(argv[2]))
-			cout << HELP_LS << endl;
+			cout << HELP_LS;
 		if (!Arguments::NAME_INDEX_LL.compare(argv[2]))
-			cout << HELP_LS << endl;
+			cout << HELP_LS;
 		if (!Arguments::NAME_SEARCH_C.compare(argv[2]))
-			cout << HELP_C << endl;
+			cout << HELP_C;
 	}
 }
 

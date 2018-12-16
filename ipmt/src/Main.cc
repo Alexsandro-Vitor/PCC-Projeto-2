@@ -31,7 +31,7 @@ void index_main(Arguments& args) {
 	output.open(args.getIndexName(), ios::out | ios::binary);
 	output << int_encode(args.opt_ls) << int_encode(args.opt_ll);
 	unsigned int lineNum = 0;
-	for (string text; getline(input, text);) {
+	for (string text; ((lineNum < args.opt_lines) || !args.opt_lines) && getline(input, text);) {
 		cout << lineNum++ << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
 		output << int_encode(sa.size());
@@ -72,7 +72,7 @@ void search_main(Arguments& args) {
 	args.opt_ll = int_decode(intString);
 	cout << args << endl;
 
-	for (unsigned int lineNum = 0; readInt(); lineNum++) {
+	for (unsigned int lineNum = 0; ((lineNum < args.opt_lines) || !args.opt_lines) && readInt(); lineNum++) {
 		unsigned int lineSize = int_decode(intString);
 		vector<unsigned int> sa(lineSize, 0);
 		//cout << lineSize << endl;
