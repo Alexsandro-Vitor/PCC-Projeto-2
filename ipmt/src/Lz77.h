@@ -11,9 +11,7 @@ using namespace std;
 
 // Builds the finite state machine
 vector< vector<unsigned int> > build_fsm(string& pat) {
-	vector< vector<unsigned int> > delta(pat.size() + 1, vector<unsigned int>(256));
-	for (unsigned short c = 0; c <= UCHAR_MAX; c++)
-		delta[0][c] = 0;
+	vector< vector<unsigned int> > delta(pat.size() + 1, vector<unsigned int>(256, 0));
 	delta[0][pat[0]] = 1;
 	int brd = 0;
 	for (unsigned int i = 1; i <= pat.size(); i++) {
@@ -71,15 +69,28 @@ string int_encode(unsigned int x) {
 // Encodes the string
 string lz77_encode(string txt, unsigned int ls, unsigned int ll) {
 	string W = string(ls, 0) + txt;
-	string code;
-	unsigned int p, l;
+	string code = string(txt.size() * 9, 0);
+	unsigned int p, l, i = 0;
 	for (unsigned int j = ls; j < W.size(); j += l + 1) {
 		unsigned int tempindex = min((unsigned int)W.size(), j+ll);
 		prefix_match(W.substr(j-ls, tempindex - (j-ls)), W.substr(j, tempindex - j), p, l);
-		code += int_encode(p);
-		code += int_encode(l);
-		code += W[j+l];
+		string temp = int_encode(p);
+		for (unsigned int k = 0; k < 4; k++) {
+			code[i + k] = temp[k];
+		}
+		i += 4;
+		temp = int_encode(l);
+		for (unsigned int k = 0; k < 4; k++) {
+			code[i + k] = temp[k];
+		}
+		i += 4;
+		//code += int_encode(p);
+		//code += int_encode(l);
+		code[i] = W[j+l];
+		//code += W[j+l];
+		i++;
 	}
+	code.resize(i);
 	return code;
 }
 
