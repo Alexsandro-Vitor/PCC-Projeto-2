@@ -4,15 +4,14 @@
 #include <climits>
 #include <cmath>
 #include <iostream>
-#include <unordered_map>
 #include <vector>
 #include "Tuple.h"
 
 using namespace std;
 
 // Builds the finite state machine
-vector< unordered_map<char, int> > build_fsm(string& pat) {
-	vector< unordered_map<char, int> > delta(pat.size() + 1);
+vector< vector<unsigned int> > build_fsm(string& pat) {
+	vector< vector<unsigned int> > delta(pat.size() + 1, vector<unsigned int>(256));
 	for (unsigned short c = 0; c <= UCHAR_MAX; c++)
 		delta[0][c] = 0;
 	delta[0][pat[0]] = 1;
@@ -29,7 +28,7 @@ vector< unordered_map<char, int> > build_fsm(string& pat) {
 }
 
 //Prints the fsm
-void print_fsm(string& pat, vector< unordered_map<char, int> >& delta) {
+void print_fsm(string& pat, vector< vector<unsigned int> >& delta) {
 	cout << "  ";
 	for (unsigned int i = 0; i <= UCHAR_MAX; i++) {
 		cout << i << ' ';
@@ -43,7 +42,7 @@ void print_fsm(string& pat, vector< unordered_map<char, int> >& delta) {
 }
 
 void prefix_match(string window, string pat, unsigned int& pos, unsigned int& maxlen) {
-	vector< unordered_map<char, int> > fsm = build_fsm(pat);
+	vector< vector<unsigned int> > fsm = build_fsm(pat);
 	pos = maxlen = 0;
 	unsigned int cur = 0, ls = window.size() - pat.size();
 	for (unsigned int i = 0; i < window.size();) {
