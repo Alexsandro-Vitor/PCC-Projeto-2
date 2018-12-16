@@ -110,13 +110,14 @@ void search_main(Arguments& args) {
 	}
 
 	// Imprime cada linha com o padrão
-	cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << matches.size() << " matches" << endl;
+	count = matches.size();
 	while (matches.size()) {
 		Match temp = matches.front();
 		if (!args.opt_count) cout << FORMAT_PATH << args.filename << FORMAT_RESET << ':' << temp << endl;
 
 		matches.pop();
 	}
+	cout << FORMAT_PATH << args.filename << FORMAT_RESET << ": " << count << " matches" << endl;
 }
 
 int main(int argc, char* argv[]) {
