@@ -84,17 +84,14 @@ string lz77_encode(string txt, unsigned int ls, unsigned int ll) {
 			code[i + k] = temp[k];
 		}
 		i += 4;
-		//code += int_encode(p);
-		//code += int_encode(l);
 		code[i] = W[j+l];
-		//code += W[j+l];
 		i++;
 	}
 	code.resize(i);
 	return code;
 }
 
-// Decodes a string encoded as a string
+// Decodes an unsigned int encoded as a string
 unsigned int int_decode(string x) {
 	unsigned int power = 1, val = 0, c = x.size();
 	for (unsigned int i = 0; i < x.size(); i++)
