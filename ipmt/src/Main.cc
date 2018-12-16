@@ -75,16 +75,13 @@ void search_main(Arguments& args) {
 	for (unsigned int lineNum = 0; ((lineNum < args.opt_lines) || !args.opt_lines) && readInt(); lineNum++) {
 		unsigned int lineSize = int_decode(intString);
 		vector<unsigned int> sa(lineSize, 0);
-		//cout << lineSize << endl;
 		for (unsigned int i = 0; i < lineSize; i++) {
 			readInt();
 			sa[i] = int_decode(intString);
-			//cout << sa[i] << ' ';
-		} //cout << endl;
+		}
 
 		readInt();
 		lineSize = int_decode(intString);
-		//cout << lineSize / 9 << endl;
 		vector<Tuple> line(lineSize / 9, Tuple());
 		for (unsigned int i = 0; i < line.size(); i++) {
 			readInt();
@@ -94,7 +91,6 @@ void search_main(Arguments& args) {
 			input.get(line[i].c);
 		}
 		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll);
-		//cout << decoded << endl;
 
 		if (args.opt_count)
 			count += sa_search(decoded, args.patterns, sa);
