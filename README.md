@@ -25,7 +25,7 @@ padrão: A string a ser buscada.
 arquivo: Arquivo a ser lido para gerar o arquivo índice ou para se fazer a busca nele.
 
 ## Opções Disponíveis
-* `-l, --lines`: Define o parâmetro lines para a compressão.
+* `-l, --lines`: Define a quantidade de linhas do arquivo a serem comprimidas ou buscadas.
 Padrão: 0 (indexar / buscar em todo o arquivo).
 ### Indexação
 * `--ls`: Define o parâmetro ls para a compressão.
