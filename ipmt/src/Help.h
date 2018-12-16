@@ -36,8 +36,10 @@ int show_help(int argc, char* argv[]) {
 		cout << "padrão  : Padrão a ser buscado." << endl;
 		cout << "arquivo : Arquivo a ser lido para gerar o arquivo índice"
 		" (modo indexação) ou para se realizar a busca nele (modo busca)." << endl;
+		cout << "Opções (Geral):" << endl;
+		cout << HELP_LINES << endl;
 		cout << "Opções (Indexação):" << endl;
-		cout << HELP_LINES << HELP_LS << HELP_LL;
+		cout << HELP_LS << HELP_LL;
 		cout << "Opções (Busca):" << endl;
 		cout << HELP_C;
 		cout << "Adicionando uma das opções após -h ou --help, é possível receber informação apenas sobre ela." << endl;
