@@ -1,7 +1,7 @@
 #ifndef __ARGUMENTS_H_INCLUDED__
 #define __ARGUMENTS_H_INCLUDED__
 
-#include <iostream>
+#include <ostream>
 #include <unordered_set>
 #include <string>
 
@@ -12,15 +12,12 @@ class Arguments {
 		static const string NAME_H;
 		static const string NAME_HELP; 
 		static const string NAME_INDEX;
-		static const string NAME_INDEX_A;
-		static const string NAME_INDEX_ALPHABET;
 		static const string NAME_INDEX_LS;
 		static const string NAME_INDEX_LL;
 		static const string NAME_SEARCH;
 		static const string NAME_SEARCH_C;
 		static const string NAME_SEARCH_COUNT;
 		bool index_mode;
-		string opt_alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 		unsigned int opt_ls = 10;
 		unsigned int opt_ll = 5;
 		bool opt_count = false;
@@ -37,8 +34,6 @@ const string Arguments::NAME_H = "-h";
 const string Arguments::NAME_HELP = "--help";
 
 const string Arguments::NAME_INDEX = "index";
-const string Arguments::NAME_INDEX_A = "-a";
-const string Arguments::NAME_INDEX_ALPHABET = "--alphabet";
 const string Arguments::NAME_INDEX_LS = "--ls";
 const string Arguments::NAME_INDEX_LL = "--ll";
 
@@ -59,8 +54,6 @@ inline void Arguments::init_index(int count, char** args) {
 	for (; i < count; i++) {
 		if (args[i][0] != '-') break;
 
-		if (!(NAME_INDEX_A.compare(args[i]) && NAME_INDEX_ALPHABET.compare(args[i])))
-			opt_alphabet = args[++i];
 		else if (!NAME_INDEX_LS.compare(args[i]))
 			opt_ls = stoi(args[++i]);
 		else if (!NAME_INDEX_LL.compare(args[i]))
@@ -104,7 +97,6 @@ inline string Arguments::getIndexName() {
 ostream& operator<<(ostream& os, const Arguments& args) {
 	os << "Arguments(" << endl;
 	os << "\tmode = " << (args.index_mode ? "INDEX" : "SEARCH") << "," << endl;
-	os << "\topt_alphabet = \"" << args.opt_alphabet << "\"," << endl;
 	os << "\topt_ls = " << args.opt_ls << ',' << endl;
 	os << "\topt_ll = " << args.opt_ll << ',' << endl;
 

@@ -26,8 +26,6 @@ arquivo: Arquivo a ser lido para gerar o arquivo índice ou para se fazer a busc
 
 ## Opções Disponíveis
 ### Indexação
-* `-a`, `--alphabet`: Define o alfabeto para a compressão.
-Padrão: "0123456789abcdefghijklmnopqrstuvwxyz"
 * `--ls`: Define o parâmetro ls para a compressão.
 Padrão: 10
 * `--ll`: Define o parâmetro ll para a compressão.

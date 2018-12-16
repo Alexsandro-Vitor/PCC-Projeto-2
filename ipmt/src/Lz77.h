@@ -6,6 +6,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include "Tuple.h"
 
 using namespace std;
 
@@ -28,15 +29,15 @@ vector< unordered_map<char, int> > build_fsm(string& pat) {
 }
 
 //Prints the fsm
-void print_fsm(string& pat, string& ab, vector< unordered_map<char, int> >& delta) {
+void print_fsm(string& pat, vector< unordered_map<char, int> >& delta) {
 	cout << "  ";
-	for (unsigned int i = 0; i < ab.size(); i++) {
-		cout << ab[i] << ' ';
+	for (unsigned int i = 0; i <= UCHAR_MAX; i++) {
+		cout << i << ' ';
 	} cout << endl;
 	for (unsigned int i = 0; i < pat.size(); i++) {
 		cout << pat[i] << ' ';
-		for (unsigned int j = 0; j < ab.size(); j++) {
-			cout << delta[i][ab[j]] << ' ';
+		for (unsigned int j = 0; j <= UCHAR_MAX; j++) {
+			cout << delta[i][j] << ' ';
 		} cout << endl;
 	}
 }
@@ -83,30 +84,23 @@ string lz77_encode(string txt, unsigned int ls, unsigned int ll) {
 	return code;
 }
 
+// Decodes a string encoded as a string
 unsigned int int_decode(string x) {
 	unsigned int power = 1, val = 0, c = x.size();
-	for (unsigned int i = 0; i < x.size(); i++) {
-		val <<= CHAR_BIT;
-		val += x[i];
-	}
+	for (unsigned int i = 0; i < x.size(); i++)
+		val = (val << CHAR_BIT) + (unsigned char)x[i];
 	return val;
 }
 
 // Decodes the string
-string lz77_decode(string& code, unsigned int ls, unsigned int ll, string& ab) {
-	string txt = string(ls, ab[0]);
-	double logl = log(ab.size());
-	unsigned int bs = (unsigned int)ceil(log(ls) / logl), bl = (unsigned int)ceil(log(ll) / logl);
-	unsigned int j = 0, sb_init = 0;
-	while (j < code.size()) {
-		unsigned int p = int_decode(code.substr(j, bs));
-		j += bs;
-		unsigned int l = int_decode(code.substr(j, bl));
-		j += bl;
-		for (unsigned int i = 0; i < l; i++)
-			txt += txt[sb_init + p + i];
-		txt += code[j++];
-		sb_init += l + 1;
+string lz77_decode(vector<Tuple>& code, unsigned int ls, unsigned int ll) {
+	string txt = string(ls, 0);
+	unsigned int sb_init = 0;
+	for (unsigned int i = 0; i < code.size(); i++) {
+		for (unsigned int j = 0; j < code[i].l; j++)
+			txt += txt[sb_init + code[i].p + j];
+		txt += code[i].c;
+		sb_init += code[i].l + 1;
 	}
 	return txt.erase(0, ls);
 }

@@ -12,6 +12,7 @@ using namespace std;
 #include "Arguments.h"
 #include "Help.h"
 #include "Match.h"
+#include "Tuple.h"
 
 #include "Lz77.h"
 #include "SuffixArray.h"
@@ -28,24 +29,22 @@ void index_main(Arguments& args) {
 	cout << args << endl;
 
 	output.open(args.getIndexName(), ios::out | ios::binary);
-	//output << args.opt_alphabet << endl;
 	output << int_encode(args.opt_ls) << int_encode(args.opt_ll);
+	unsigned int lineNum = 0;
 	for (string text; getline(input, text);) {
+		cout << lineNum++ << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
 		output << int_encode(sa.size());
-		cout << sa.size() << endl;
+		//cout << sa.size() << endl;
 		for (const unsigned int i : sa) {
 			output << int_encode(i);
-			cout << i << ' ';
-		} cout << endl;
-		output << lz77_encode(text, args.opt_ls, args.opt_ll);
+			//cout << i << ' ';
+		} //cout << endl;
+		string encoded = lz77_encode(text, args.opt_ls, args.opt_ll);
+		//cout << encoded.size() << endl;
+		//cout << encoded << endl;
+		output << int_encode(encoded.size()) << encoded;
 	}
-}
-
-inline bool gettrimline(ifstream& in, string& str) {
-	bool out = (bool)getline(in, str);
-	if (out) str.resize(str.size() - 1);
-	return out;
 }
 
 char intBuffer[4];
@@ -57,7 +56,6 @@ inline bool readInt() {
 }
 
 void search_main(Arguments& args) {
-	cout << "search" << endl;
 	queue<Match> matches;	// Os matches encontrados vão pra cá
 	unsigned int count = 0;	// Se não for para imprimir, eles são contados aqui
 
@@ -68,7 +66,6 @@ void search_main(Arguments& args) {
 	}
 
 	// Parâmetros da compressão
-	cout << "params" << endl;
 	readInt();
 	args.opt_ls = int_decode(intString);
 	readInt();
@@ -78,54 +75,31 @@ void search_main(Arguments& args) {
 	for (unsigned int lineNum = 0; readInt(); lineNum++) {
 		unsigned int lineSize = int_decode(intString);
 		vector<unsigned int> sa(lineSize, 0);
-		cout << lineSize << endl;
+		//cout << lineSize << endl;
 		for (unsigned int i = 0; i < lineSize; i++) {
 			readInt();
-			sa[lineSize] = int_decode(intString);
-			cout << sa[lineSize] << ' ';
-		} cout << endl;
-		string line = string(lineSize * 9, 0);
+			sa[i] = int_decode(intString);
+			//cout << sa[i] << ' ';
+		} //cout << endl;
+
+		readInt();
+		lineSize = int_decode(intString);
+		//cout << lineSize / 9 << endl;
+		vector<Tuple> line(lineSize / 9, Tuple());
 		for (unsigned int i = 0; i < line.size(); i++) {
 			readInt();
-			for (unsigned int j = 0; j < 4; j++) {
-				line[i + j] = intString[j];
-			}
-			i += 4;
+			line[i].p = int_decode(intString);
 			readInt();
-			for (unsigned int j = 0; j < 4; j++) {
-				line[i + j] = intString[j];
-			}
-			i += 4;
-			char c;
-			input.get(c);
-			line[i] = c;
-		} cout << line << endl;
-		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
-	}
-
-	//gettrimline(input, args.opt_alphabet);
-	/*string line;
-	
-	gettrimline(input, line);
-	args.opt_ls = int_decode(line, args.opt_alphabet);
-	gettrimline(input, line);
-	args.opt_ll = int_decode(line, args.opt_alphabet);
-	cout << args << endl;
-
-	for (unsigned int lineNumber = 0; gettrimline(input, line); lineNumber++) {
-		unsigned int size = int_decode(line, args.opt_alphabet);
-		vector<unsigned int> sa(size, 0);
-		while (size) {
-			gettrimline(input, line);
-			sa[sa.size() - size--] = int_decode(line, args.opt_alphabet);
+			line[i].l = int_decode(intString);
+			input.get(line[i].c);
 		}
+		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll);
+		//cout << decoded << endl;
 
-		gettrimline(input, line);
-		string decoded = lz77_decode(line, args.opt_ls, args.opt_ll, args.opt_alphabet);
 		if (args.opt_count)
 			count += sa_search(decoded, args.patterns, sa);
 		else
-			sa_search(decoded, args.patterns, sa, lineNumber, matches);
+			sa_search(decoded, args.patterns, sa, lineNum, matches);
 	}
 
 	// Imprime apenas a quantidade de matches
@@ -141,7 +115,7 @@ void search_main(Arguments& args) {
 		if (!args.opt_count) cout << FORMAT_PATH << args.filename << FORMAT_RESET << ':' << temp << endl;
 
 		matches.pop();
-	}*/
+	}
 }
 
 int main(int argc, char* argv[]) {

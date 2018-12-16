@@ -9,9 +9,6 @@
 using namespace std;
 
 // Constantes
-const string HELP_A =	"-a, --alphabet:\n"
-						"	Define o alfabeto para a compressão.\n"
-						"	Padrão: \"0123456789abcdefghijklmnopqrstuvwxyz\"";
 const string HELP_LS =	"--ls:\n"
 						"	Define o parâmetro ls para a compressão.\n"
 						"	Padrão: 10";
@@ -37,13 +34,11 @@ int show_help(int argc, char* argv[]) {
 		cout << "arquivo : Arquivo a ser lido para gerar o arquivo índice"
 		" (modo indexação) ou para se realizar a busca nele (modo busca)." << endl;
 		cout << "Opções (Indexação):" << endl;
-		cout << HELP_A << endl << HELP_LS << endl << HELP_LL << endl;
+		cout << HELP_LS << endl << HELP_LL << endl;
 		cout << "Opções (Busca):" << endl;
 		cout << HELP_C << endl;
 		cout << "Adicionando uma das opções após -h ou --help, é possível receber informação apenas sobre ela." << endl;
 	} else {
-		if (!(Arguments::NAME_INDEX_A.compare(argv[2]) && Arguments::NAME_INDEX_ALPHABET.compare(argv[2])))
-			cout << HELP_A << endl;
 		if (!Arguments::NAME_INDEX_LS.compare(argv[2]))
 			cout << HELP_LS << endl;
 		if (!Arguments::NAME_INDEX_LL.compare(argv[2]))
