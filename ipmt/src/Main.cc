@@ -32,19 +32,19 @@ void index_main(Arguments& args) {
 	output << int_encode(args.opt_ls) << int_encode(args.opt_ll);
 	unsigned int lineNum = 0;
 	for (string text; ((lineNum < args.opt_lines) || !args.opt_lines) && getline(input, text);) {
-		cout << lineNum++ << endl;
 		vector<unsigned int> sa = gen_suffix_array(text);
 		output << int_encode(sa.size());
-		//cout << sa.size() << endl;
 		for (const unsigned int i : sa) {
 			output << int_encode(i);
-			//cout << i << ' ';
-		} //cout << endl;
+		}
 		string encoded = lz77_encode(text, args.opt_ls, args.opt_ll);
-		//cout << encoded.size() << endl;
-		//cout << encoded << endl;
 		output << int_encode(encoded.size()) << encoded;
-	}
+
+		cout << "\r" << ++lineNum;
+		if (args.opt_lines)
+			cout << '/' << args.opt_lines;
+		cout << " lines indexed" << flush;
+	} cout << endl;
 }
 
 char intBuffer[4];
