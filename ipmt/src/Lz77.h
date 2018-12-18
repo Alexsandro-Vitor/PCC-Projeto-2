@@ -1,6 +1,7 @@
 #ifndef __LZ77_H_INCLUDED__
 #define __LZ77_H_INCLUDED__
 
+#include <array>
 #include <climits>
 #include <cmath>
 #include <iostream>
@@ -10,23 +11,22 @@
 using namespace std;
 
 // Builds the finite state machine
-vector< vector<unsigned int> > build_fsm(string& pat) {
-	vector< vector<unsigned int> > delta(pat.size() + 1, vector<unsigned int>(256, 0));
+vector< array<unsigned int, 256> > build_fsm(string& pat) {
+	vector< array<unsigned int, 256> > delta(pat.size() + 1, array<unsigned int, 256>());
+	delta[0].fill(0);
 	delta[0][pat[0]] = 1;
-	int brd = 0;
+	unsigned int brd = 0;
 	for (unsigned int i = 1; i <= pat.size(); i++) {
-		for (unsigned short c = 0; c <= UCHAR_MAX; c++)
-			delta[i][c] = delta[brd][c];
+		delta[i] = delta[brd];
 		delta[i][pat[i]] = i + 1;
 		brd = delta[brd][pat[i]];
 	}
-	for (unsigned short c = 0; c <= UCHAR_MAX; c++)
-		delta[pat.size()][c] = delta[brd][c];
+	delta[pat.size()] = delta[brd];
 	return delta;
 }
 
 //Prints the fsm
-void print_fsm(string& pat, vector< vector<unsigned int> >& delta) {
+void print_fsm(string& pat, vector< array<unsigned int, 256> >& delta) {
 	cout << "  ";
 	for (unsigned int i = 0; i <= UCHAR_MAX; i++) {
 		cout << i << ' ';
@@ -40,7 +40,7 @@ void print_fsm(string& pat, vector< vector<unsigned int> >& delta) {
 }
 
 void prefix_match(string window, string pat, unsigned int& pos, unsigned int& maxlen) {
-	vector< vector<unsigned int> > fsm = build_fsm(pat);
+	vector< array<unsigned int, 256> > fsm = build_fsm(pat);
 	pos = maxlen = 0;
 	unsigned int cur = 0, ls = window.size() - pat.size();
 	for (unsigned int i = 0; i < window.size();) {
